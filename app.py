@@ -113,37 +113,37 @@ def place_order():
     session.pop('cart', None) # Очищаем корзину после оформления заказа
     return redirect(url_for('order_confirmation'))
 
-# @app.route('/order_confirmation')
-# def order_confirmation():
-#     """
-#     Страница подтверждения заказа.
-#     """
-#     last_order = session.pop('last_order', None) # Получаем и сразу удаляем из сессии
-#     if not last_order:
-#         return redirect(url_for('index')) # Если нет информации о последнем заказе, перенаправляем на главную
-    
-    
-#     return render_template('order_confirmation.html', order=last_order)
-
-# if __name__ == '__main__':
-#     app.run() # debug=True для разработки, отключите в продакшене
 @app.route('/order_confirmation')
 def order_confirmation():
-    last_order = session.get('last_order')
-
-    if last_order:
-        print(f"DEBUG: last_order received: {last_order}")
-        if 'items' in last_order and isinstance(last_order['items'], dict):
-            print(f"DEBUG: order.items (cart) content: {last_order['items']}")
-            for item_id, item_data in last_order['items'].items():
-                print(f"DEBUG: Item: ID={item_id}, Data={item_data}, Type of Data={type(item_data)}")
-                if isinstance(item_data, dict):
-                    print(f"DEBUG: Item Data Keys: {item_data.keys()}")
-                else:
-                    print(f"DEBUG: WARNING: item_data is not a dict for {item_id}!")
-        else:
-            print("DEBUG: 'items' not found in last_order or not a dict.")
-    else:
-        print("DEBUG: No last_order in session.")
-
+    """
+    Страница подтверждения заказа.
+    """
+    last_order = session.pop('last_order', None) # Получаем и сразу удаляем из сессии
+    if not last_order:
+        return redirect(url_for('index')) # Если нет информации о последнем заказе, перенаправляем на главную
+    
+    
     return render_template('order_confirmation.html', order=last_order)
+
+if __name__ == '__main__':
+    app.run() # debug=True для разработки, отключите в продакшене
+# @app.route('/order_confirmation')
+# def order_confirmation():
+#     last_order = session.get('last_order')
+
+#     if last_order:
+#         print(f"DEBUG: last_order received: {last_order}")
+#         if 'items' in last_order and isinstance(last_order['items'], dict):
+#             print(f"DEBUG: order.items (cart) content: {last_order['items']}")
+#             for item_id, item_data in last_order['items'].items():
+#                 print(f"DEBUG: Item: ID={item_id}, Data={item_data}, Type of Data={type(item_data)}")
+#                 if isinstance(item_data, dict):
+#                     print(f"DEBUG: Item Data Keys: {item_data.keys()}")
+#                 else:
+#                     print(f"DEBUG: WARNING: item_data is not a dict for {item_id}!")
+#         else:
+#             print("DEBUG: 'items' not found in last_order or not a dict.")
+#     else:
+#         print("DEBUG: No last_order in session.")
+
+#     return render_template('order_confirmation.html', order=last_order)
