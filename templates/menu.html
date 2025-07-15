@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Наше Меню{% endblock %}
+
+{% block content %}
+    <section class="menu-section">
+        <h1>Наше Меню</h1>
+        <div class="menu-grid">
+            {% for item in menu_items %}
+            <div class="menu-card">
+                <h3>{{ item.name }}</h3>
+                <p class="price">{{ item.price }} ₽</p>
+                <p class="description">{{ item.description }}</p>
+                <details class="ingredients-details">
+                    <summary>Ингредиенты</summary>
+                    <ul>
+                        {% for ingredient in item.ingredients %}
+                            <li>{{ ingredient }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                <button class="add-to-cart-btn" data-item-id="{{ item.id }}">Добавить в корзину (+)</button>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
