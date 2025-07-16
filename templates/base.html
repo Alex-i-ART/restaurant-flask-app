@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ресторан "Вкусная Еда"{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 <body>
     <header>
         <nav>
             <div class="logo">
-                <a href="{{ url_for('index') }}">Gourmet</a>
+                <a href="{{ url_for('index') }}">Ресторан "Вкусная Еда"</a>
             </div>
             <ul class="nav-links">
                 <li><a href="{{ url_for('index') }}">Главная</a></li>
@@ -29,17 +25,9 @@
     </main>
 
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2023 Gourmet. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
-        </div>
+        <p>&copy; 2023 Ресторан "Вкусная Еда". Все права защищены.</p>
     </footer>
 
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
