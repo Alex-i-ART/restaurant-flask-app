@@ -5,7 +5,7 @@
 {% block content %}
     <section class="confirmation-section">
         <h1>Заказ оформлен!</h1>
-        {% if order %}
+        {% if order and order.items %}
             <p>Ваш заказ успешно принят.</p>
             <p><strong>ID заказа: {{ order.id }}</strong></p>
             <p>Мы свяжемся с вами для подтверждения бронирования и деталей заказа.</p>
@@ -18,14 +18,14 @@
                 <p><strong>Количество человек:</strong> {{ order.people }}</p>
                 <h3>Блюда:</h3>
                 <ul>
-                    {% for item_name, item_data in order['items'].items() %}
+                    {% for item_name, item_data in order.items.items() %}
                         <li>{{ item_name }} - {{ item_data.quantity }} шт. ({{ item_data.price * item_data.quantity }} ₽)</li>
                     {% endfor %}
                 </ul>
                 <p><strong>Общая сумма:</strong> {{ order.total }} ₽</p>
             </div>
         {% else %}
-            <p>Информация о заказе не найдена.</p>
+            <p>Информация о заказе не найдена или некорректна.</p>
         {% endif %}
         <p><a href="{{ url_for('index') }}" class="button">Вернуться на главную</a></p>
     </section>
