@@ -12,6 +12,15 @@
 
             <h2>Детали вашего заказа:</h2>
             <div class="order-details">
+                {% if order.table_id %}
+                    <p><strong>Выбранный столик:</strong> 
+                    {% for table in tables %}
+                        {% if table.id == order.table_id %}
+                            {{ table.name }} ({{ get_table_type_name(table.type) }}, до {{ table.capacity }} человек)
+                        {% endif %}
+                    {% endfor %}
+                    </p>
+                {% endif %}
                 <p><strong>Дата:</strong> {{ order.date }}</p>
                 <p><strong>Время:</strong> {{ order.time }}</p>
                 <p><strong>Количество человек:</strong> {{ order.people }}</p>
