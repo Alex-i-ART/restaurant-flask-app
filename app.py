@@ -138,6 +138,8 @@ def place_order():
 
 @app.route('/order_confirmation')
 def order_confirmation():
+    print(f"Type of order.items: {type(last_order['items'])}")
+    print(f"Order items content: {last_order['items']}")
     last_order = session.pop('last_order', None)
     if not last_order:
         return redirect(url_for('index'))
