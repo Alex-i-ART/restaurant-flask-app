@@ -14,6 +14,36 @@ menu_items = [
     {"id": 5, "name": "Чизкейк Нью-Йорк", "price": 300, "description": "Нежный сливочный десерт с ягодным соусом.", "ingredients": ["сливочный сыр", "печенье", "сливки", "сахар", "ягоды"]},
 ]
 
+# Добавим в app.py после menu_items
+tables = {
+    'window': [{'id': i, 'number': f'W{i}', 'seats': 2, 'status': 'free'} for i in range(1, 6)],
+    'middle': [{'id': i, 'number': f'M{i}', 'seats': 4, 'status': 'free'} for i in range(1, 13)],
+    'special': [
+        {'id': 1, 'number': 'B1', 'seats': 8, 'status': 'free', 'type': 'big_table'},
+        {'id': 2, 'number': 'B2', 'seats': 5, 'status': 'free', 'type': 'bar'}
+    ]
+}
+
+@app.route('/select_table')
+def select_table():
+    """Страница выбора столика"""
+    return render_template('select_table.html', tables=tables)
+
+@app.route('/set_table', methods=['POST'])
+def set_table():
+    """Установка выбранного столика"""
+    table_number = request.form.get('table_number')
+    
+    # Находим столик и меняем его статус
+    for category in tables.values():
+        for table in category:
+            if table['number'] == table_number:
+                table['status'] = 'reserved'
+                session['selected_table'] = table
+                return redirect(url_for('menu'))
+    
+    return redirect(url_for('select_table'))
+
 @app.route('/')
 def index():
     """
@@ -85,32 +115,41 @@ def update_cart():
 
 @app.route('/place_order', methods=['POST'])
 def place_order():
-    """
-    Обрабатывает оформление заказа.
-    """
     cart = session.get('cart', {})
     if not cart:
-        return redirect(url_for('view_cart')) # Нельзя оформить пустой заказ
+        return redirect(url_for('view_cart'))
+
+    # Проверяем, выбран ли столик
+    if 'selected_table' not in session:
+        return redirect(url_for('select_table'))
 
     order_date = request.form.get('order_date')
     order_time = request.form.get('order_time')
     num_people = request.form.get('num_people')
 
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    order_id = str(uuid.uuid4()) # Генерируем уникальный ID заказа
+    order_id = str(uuid.uuid4())
 
-    # В реальном приложении эти данные сохранялись бы в базу данных
-    # Для примера сохраним в сессию, чтобы показать на странице подтверждения
     session['last_order'] = {
         'id': order_id,
         'items': cart,
         'total': total_price,
         'date': order_date,
         'time': order_time,
-        'people': num_people
+        'people': num_people,
+        'table': session['selected_table']  # Добавляем информацию о столике
     }
 
-    session.pop('cart', None) # Очищаем корзину после оформления заказа
+    # Освобождаем столик после оформления заказа
+    table_number = session['selected_table']['number']
+    for category in tables.values():
+        for table in category:
+            if table['number'] == table_number:
+                table['status'] = 'free'
+                break
+
+    session.pop('cart', None)
+    session.pop('selected_table', None)
     return redirect(url_for('order_confirmation'))
 
 @app.route('/order_confirmation')

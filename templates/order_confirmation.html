@@ -15,6 +15,7 @@
                 <p><strong>Дата:</strong> {{ order.date }}</p>
                 <p><strong>Время:</strong> {{ order.time }}</p>
                 <p><strong>Количество человек:</strong> {{ order.people }}</p>
+                <p><strong>Столик:</strong> {{ order.table.number }} ({{ order.table.seats }} мест)</p>
                 <h3>Блюда:</h3>
                 <ul>
                     {% for item_name, item_data in order['items'].items()%}
