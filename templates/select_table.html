@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Выбор столика{% endblock %}
+
+{% block content %}
+    <section class="table-selection">
+        <h1>Выберите столик</h1>
+        
+        <div class="table-map-container">
+            <div class="table-map">
+                <img src="{{ url_for('static', filename='images/table_map.png') }}" alt="Схема зала" usemap="#tablemap">
+                
+                <map name="tablemap">
+                    {% for table in tables %}
+                        <area shape="rect" coords="{{ table.x1 }},{{ table.y1 }},{{ table.x2 }},{{ table.y2 }}" 
+                              href="#" data-table-id="{{ table.id }}" alt="{{ table.name }}" 
+                              class="table-area {% if selected_table_id == table.id %}selected{% endif %}">
+                    {% endfor %}
+                </map>
+            </div>
+            
+            <div class="table-legend">
+                <h3>Доступные места:</h3>
+                <form action="{{ url_for('set_table') }}" method="post" id="table-form">
+                    <ul>
+                        {% for table in tables %}
+                            <li>
+                                <button type="button" class="table-btn {% if selected_table_id == table.id %}selected{% endif %}" 
+                                        data-table-id="{{ table.id }}">
+                                    {{ table.name }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="table_id" id="selected-table" value="{{ selected_table_id }}">
+                    <button type="submit" class="button confirm-btn">Подтвердить выбор</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

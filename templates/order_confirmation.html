@@ -12,12 +12,13 @@
 
             <h2>Детали вашего заказа:</h2>
             <div class="order-details">
+                <p><strong>Место:</strong> {{ order.table.name if order.table else "Не указано" }}</p>
                 <p><strong>Дата:</strong> {{ order.date }}</p>
                 <p><strong>Время:</strong> {{ order.time }}</p>
                 <p><strong>Количество человек:</strong> {{ order.people }}</p>
                 <h3>Блюда:</h3>
                 <ul>
-                    {% for item_name, item_data in order['items'].items()%}
+                    {% for item_name, item_data in order.items.items() %}
                         <li>{{ item_name }} - {{ item_data.quantity }} шт. ({{ item_data.price * item_data.quantity }} ₽)</li>
                     {% endfor %}
                 </ul>

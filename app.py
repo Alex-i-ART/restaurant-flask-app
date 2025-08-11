@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-import uuid # Для генерации уникальных ID заказа
+import uuid
 import os
 
 app = Flask(__name__)
@@ -14,32 +14,54 @@ menu_items = [
     {"id": 5, "name": "Чизкейк Нью-Йорк", "price": 300, "description": "Нежный сливочный десерт с ягодным соусом.", "ingredients": ["сливочный сыр", "печенье", "сливки", "сахар", "ягоды"]},
 ]
 
+# Данные о столиках
+tables = [
+    {"id": 1, "name": "Столик 1", "status": "available", "x1": 50, "y1": 50, "x2": 150, "y2": 150},
+    {"id": 2, "name": "Столик 2", "status": "available", "x1": 200, "y1": 50, "x2": 300, "y2": 150},
+    {"id": 3, "name": "Столик 3", "status": "available", "x1": 350, "y1": 50, "x2": 450, "y2": 150},
+    {"id": 4, "name": "Столик 4", "status": "available", "x1": 50, "y1": 200, "x2": 150, "y2": 300},
+    {"id": 5, "name": "Столик 5", "status": "available", "x1": 200, "y1": 200, "x2": 300, "y2": 300},
+    {"id": 6, "name": "Столик 6", "status": "available", "x1": 350, "y1": 200, "x2": 450, "y2": 300},
+    {"id": 7, "name": "Столик 7", "status": "available", "x1": 50, "y1": 350, "x2": 150, "y2": 450},
+    {"id": 8, "name": "Столик 8", "status": "available", "x1": 200, "y1": 350, "x2": 300, "y2": 450},
+    {"id": 9, "name": "Столик 9", "status": "available", "x1": 350, "y1": 350, "x2": 450, "y2": 450},
+    {"id": 10, "name": "Столик 10", "status": "available", "x1": 500, "y1": 50, "x2": 600, "y2": 150},
+    {"id": 11, "name": "Столик 11", "status": "available", "x1": 500, "y1": 200, "x2": 600, "y2": 300},
+    {"id": 12, "name": "Столик 12", "status": "available", "x1": 500, "y1": 350, "x2": 600, "y2": 450},
+    {"id": 13, "name": "Бар", "status": "available", "x1": 650, "y1": 200, "x2": 750, "y2": 300}
+]
+
 @app.route('/')
 def index():
-    """
-    Главная страница: общая информация о ресторане и приветствие.
-    """
     return render_template('index.html')
 
 @app.route('/menu')
 def menu():
-    """
-    Страница меню: отображает все доступные блюда.
-    """
     return render_template('menu.html', menu_items=menu_items)
+
+@app.route('/select_table')
+def select_table():
+    """Страница выбора столика"""
+    selected_table_id = session.get('selected_table_id')
+    return render_template('select_table.html', tables=tables, selected_table_id=selected_table_id)
+
+@app.route('/set_table', methods=['POST'])
+def set_table():
+    """Установка выбранного столика в сессии"""
+    table_id = request.form.get('table_id')
+    if table_id:
+        session['selected_table_id'] = int(table_id)
+        session['selected_table_name'] = next((t['name'] for t in tables if t['id'] == int(table_id)), 'Неизвестный столик')
+    return redirect(url_for('view_cart'))
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
-    """
-    Обрабатывает AJAX-запрос на добавление блюда в корзину.
-    """
     item_id = request.json.get('item_id')
     item = next((item for item in menu_items if item['id'] == item_id), None)
 
     if not item:
         return jsonify({'success': False, 'message': 'Блюдо не найдено'}), 404
 
-    # Инициализация корзины, если ее нет в сессии
     cart = session.get('cart', {})
     item_name = item['name']
 
@@ -48,26 +70,27 @@ def add_to_cart():
     else:
         cart[item_name] = {'price': item['price'], 'quantity': 1, 'id': item['id']}
 
-    session['cart'] = cart # Сохраняем обновленную корзину в сессии
+    session['cart'] = cart
     total_items_in_cart = sum(item_data['quantity'] for item_data in cart.values())
     return jsonify({'success': True, 'total_items': total_items_in_cart})
 
 @app.route('/cart')
 def view_cart():
-    """
-    Страница корзины: отображает выбранные блюда и форму для оформления заказа.
-    """
     cart = session.get('cart', {})
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    return render_template('cart.html', cart=cart, total_price=total_price)
+    selected_table_id = session.get('selected_table_id')
+    selected_table_name = session.get('selected_table_name', 'Не выбран')
+    
+    return render_template('cart.html', 
+                         cart=cart, 
+                         total_price=total_price,
+                         selected_table_id=selected_table_id,
+                         selected_table_name=selected_table_name)
 
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
-    """
-    Обновляет количество блюд в корзине или удаляет их.
-    """
     item_name = request.form.get('item_name')
-    action = request.form.get('action') # 'increase', 'decrease', 'remove'
+    action = request.form.get('action')
     cart = session.get('cart', {})
 
     if item_name in cart:
@@ -76,7 +99,7 @@ def update_cart():
         elif action == 'decrease':
             cart[item_name]['quantity'] -= 1
             if cart[item_name]['quantity'] <= 0:
-                del cart[item_name] # Удаляем блюдо, если количество 0 или меньше
+                del cart[item_name]
         elif action == 'remove':
             del cart[item_name]
 
@@ -85,56 +108,40 @@ def update_cart():
 
 @app.route('/place_order', methods=['POST'])
 def place_order():
-    """
-    Обрабатывает оформление заказа.
-    """
     cart = session.get('cart', {})
     if not cart:
-        return redirect(url_for('view_cart')) # Нельзя оформить пустой заказ
+        return redirect(url_for('view_cart'))
 
     order_date = request.form.get('order_date')
     order_time = request.form.get('order_time')
     num_people = request.form.get('num_people')
+    table_id = session.get('selected_table_id')
+    table_name = session.get('selected_table_name')
 
     total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    order_id = str(uuid.uuid4()) # Генерируем уникальный ID заказа
+    order_id = str(uuid.uuid4())
 
-    # В реальном приложении эти данные сохранялись бы в базу данных
-    # Для примера сохраним в сессию, чтобы показать на странице подтверждения
     session['last_order'] = {
         'id': order_id,
         'items': cart,
         'total': total_price,
         'date': order_date,
         'time': order_time,
-        'people': num_people
+        'people': num_people,
+        'table': {'id': table_id, 'name': table_name}
     }
 
-    session.pop('cart', None) # Очищаем корзину после оформления заказа
+    session.pop('cart', None)
+    session.pop('selected_table_id', None)
+    session.pop('selected_table_name', None)
     return redirect(url_for('order_confirmation'))
 
 @app.route('/order_confirmation')
 def order_confirmation():
-    """
-    Страница подтверждения заказа.
-    """
-    last_order = session.pop('last_order', None) # Получаем и сразу удаляем из сессии
+    last_order = session.pop('last_order', None)
     if not last_order:
-        return redirect(url_for('index')) # Если нет информации о последнем заказе, перенаправляем на главную
-    
-    if last_order:
-        print(f"DEBUG: last_order received: {last_order}")
-        if 'items' in last_order and isinstance(last_order['items'], dict):
-            print(f"DEBUG: order.items (cart) content: {last_order['items']}")
-            for item_id, item_data in last_order['items'].items():
-                print(f"DEBUG: Item: ID={item_id}, Data={item_data}, Type of Data={type(item_data)}")
-                if isinstance(item_data, dict):
-                    print(f"DEBUG: Item Data Keys: {item_data.keys()}")
-                else:
-                    print(f"DEBUG: WARNING: item_data is not a dict for {item_id}!")
-        else:
-            print("DEBUG: 'items' not found in last_order or not a dict.")
-    else:
-        print("DEBUG: No last_order in session.")
-
+        return redirect(url_for('index'))
     return render_template('order_confirmation.html', order=last_order)
+
+if __name__ == '__main__':
+    app.run(debug=True)

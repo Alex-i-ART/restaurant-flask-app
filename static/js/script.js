@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Обработка кликов по кнопкам "Добавить в корзину"
+    // Обработка добавления в корзину
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-
     addToCartButtons.forEach(button => {
         button.addEventListener('click', async (event) => {
-            const itemId = event.target.dataset.itemId; // Получаем ID блюда из data-атрибута
+            const itemId = event.target.dataset.itemId;
 
             try {
                 const response = await fetch('/add_to_cart', {
@@ -12,16 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ item_id: parseInt(itemId) }) // Отправляем ID блюда
+                    body: JSON.stringify({ item_id: parseInt(itemId) })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     alert('Блюдо успешно добавлено в корзину!');
-                    // Здесь можно обновить счетчик товаров в корзине на навигационной панели, если он есть
-                    // Пример: const cartCountElement = document.getElementById('cart-count');
-                    // if (cartCountElement) { cartCountElement.textContent = data.total_items; }
                 } else {
                     alert('Ошибка при добавлении блюда: ' + data.message);
                 }
@@ -32,5 +28,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Дополнительный JS, если потребуется (например, для модальных окон)
+    // Обработка выбора столика
+    const tableButtons = document.querySelectorAll('.table-btn, area');
+    const selectedTableInput = document.getElementById('selected-table');
+    
+    tableButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tableId = btn.dataset.tableId;
+            
+            // Удаляем предыдущее выделение
+            document.querySelectorAll('.table-btn.selected, area.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Добавляем выделение к выбранному элементу
+            btn.classList.add('selected');
+            selectedTableInput.value = tableId;
+        });
+    });
+
+    // Инициализация выбранного столика при загрузке
+    if (selectedTableInput.value) {
+        const selectedBtn = document.querySelector(`[data-table-id="${selectedTableInput.value}"]`);
+        if (selectedBtn) {
+            selectedBtn.classList.add('selected');
+        }
+    }
 });

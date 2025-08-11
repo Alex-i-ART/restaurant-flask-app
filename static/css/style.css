@@ -388,3 +388,69 @@ h1, h2, h3 {
     }
 }
 
+/* Table Selection Styles */
+.table-selection {
+    padding: 20px;
+    text-align: center;
+}
+
+.table-map-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.table-map {
+    position: relative;
+    max-width: 800px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+}
+
+.table-map img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.table-legend {
+    min-width: 200px;
+    text-align: left;
+}
+
+.table-btn {
+    display: block;
+    width: 100%;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: left;
+}
+
+.table-btn:hover, .table-btn.selected {
+    background: #ffc107;
+    border-color: #e0a800;
+}
+
+.confirm-btn {
+    margin-top: 20px;
+}
+
+.small-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Highlight selected table */
+area.selected {
+    outline: 2px solid #ffc107;
+}

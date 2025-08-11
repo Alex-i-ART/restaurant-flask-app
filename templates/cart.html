@@ -29,6 +29,12 @@
                 <h2>Оформление заказа</h2>
                 <form action="{{ url_for('place_order') }}" method="post">
                     <div class="form-group">
+                        <label>Выбранный столик:</label>
+                        <p>{{ selected_table_name }}</p>
+                        <a href="{{ url_for('select_table') }}" class="button small-btn">Изменить столик</a>
+                        <input type="hidden" name="table_id" value="{{ selected_table_id }}">
+                    </div>
+                    <div class="form-group">
                         <label for="order_date">Дата:</label>
                         <input type="date" id="order_date" name="order_date" required>
                     </div>
