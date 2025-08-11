@@ -18,7 +18,7 @@
                 <p><strong>Столик:</strong> {{ order.table.number }} ({{ order.table.seats }} мест)</p>
                 <h3>Блюда:</h3>
                 <ul>
-                    {% for item_name, item_data in order['items'].items()%}
+                    {% for item_name, item_data in order.items.items() %}
                         <li>{{ item_name }} - {{ item_data.quantity }} шт. ({{ item_data.price * item_data.quantity }} ₽)</li>
                     {% endfor %}
                 </ul>

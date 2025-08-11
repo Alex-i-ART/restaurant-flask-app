@@ -7,8 +7,6 @@
         <h1>Ваша Корзина</h1>
 
         {% if cart %}
-
-            <!-- Добавить в начало cart.html, после {% if cart %} -->
             {% if 'selected_table' in session %}
                 <div class="selected-table-info">
                     <p><strong>Выбранный столик:</strong> {{ session.selected_table.number }} ({{ session.selected_table.seats }} мест)</p>
@@ -19,7 +17,7 @@
                     <p>Вы не выбрали столик.</p>
                     <a href="{{ url_for('select_table') }}" class="button">Выбрать столик</a>
                 </div>
-            {% endif %}            
+            {% endif %}
 
             <div class="cart-items">
                 {% for item_name, item_data in cart.items() %}
@@ -54,7 +52,7 @@
                         <label for="num_people">Количество человек:</label>
                         <input type="number" id="num_people" name="num_people" min="1" value="1" required>
                     </div>
-                    <button type="submit" class="button">Оформить заказ</button>
+                    <button type="submit" class="button" {% if 'selected_table' not in session %}disabled{% endif %}>Оформить заказ</button>
                 </form>
             </div>
         {% else %}
