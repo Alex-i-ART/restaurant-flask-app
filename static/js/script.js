@@ -101,3 +101,35 @@ document.addEventListener('DOMContentLoaded', () => {
         el.hasAttribute('open') ? el.removeAttribute('open') : el.setAttribute('open', 'open');
     });
 })();
+
+// Управление шапкой при скролле
+let lastScroll = 0;
+const header = document.querySelector('header');
+const headerHeight = header.offsetHeight;
+const scrollThreshold = 100; // На сколько пикселей нужно проскроллить для срабатывания
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll <= headerHeight) {
+        // Вверху страницы - всегда показываем
+        header.classList.remove('hide');
+        header.classList.add('show');
+        return;
+    }
+    
+    if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
+        // Прокрутка вниз
+        header.classList.remove('show');
+        header.classList.add('hide');
+    } else if (currentScroll < lastScroll) {
+        // Прокрутка вверх
+        header.classList.remove('hide');
+        header.classList.add('show');
+    }
+    
+    lastScroll = currentScroll;
+});
+
+// Инициализация при загрузке
+header.classList.add('show');

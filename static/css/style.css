@@ -575,6 +575,16 @@ h2 {
     }
 }
 
+@media (max-width: 768px) {
+    main {
+        margin-top: 70px; /* Меньший отступ для мобильных */
+    }
+    
+    header {
+        padding: 10px 0;
+    }
+}
+
 @media (max-width: 480px) {
     .hero {
         padding: 60px 20px;
@@ -594,4 +604,32 @@ h2 {
     .menu-section {
         padding: 25px 15px;
     }
+}
+
+/* Анимация шапки при скролле */
+header {
+    transition: transform 0.3s ease-in-out;
+}
+
+header.hide {
+    transform: translateY(-100%);
+}
+
+header.show {
+    transform: translateY(0);
+}
+
+/* Фиксированная шапка */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Добавляем отступ для основного содержимого */
+main {
+    margin-top: 80px; /* Высота шапки */
 }
