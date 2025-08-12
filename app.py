@@ -145,5 +145,11 @@ def order_confirmation():
     
     return render_template('order_confirmation.html', order=last_order)
 
+@app.route('/get_cart_count')
+def get_cart_count():
+    cart = session.get('cart', {})
+    total_items = sum(item['quantity'] for item in cart.values())
+    return jsonify({'success': True, 'total_items': total_items})
+
 if __name__ == '__main__':
     app.run(debug=True)

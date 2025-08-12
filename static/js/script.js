@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ==================== ОБРАБОТКА КОРЗИНЫ ====================
+    // Инициализация счетчика корзины
+    updateCartCounterOnLoad();
+
+    // Обработка добавления в корзину
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
     
     addToCartButtons.forEach(button => {
@@ -30,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ==================== ВЫБОР СТОЛИКА ====================
+    // Выбор столика
     const tableButtons = document.querySelectorAll('.table-btn');
     const selectedTableInput = document.getElementById('selected-table');
     const confirmBtn = document.querySelector('.confirm-btn');
@@ -38,44 +41,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tableButtons.length > 0) {
         tableButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Снимаем выделение со всех кнопок
                 tableButtons.forEach(b => b.classList.remove('selected'));
-                
-                // Выделяем текущую кнопку
                 btn.classList.add('selected');
-                
-                // Обновляем скрытое поле формы
                 selectedTableInput.value = btn.dataset.tableId;
                 
-                // Обновляем текст кнопки подтверждения
                 if (confirmBtn) {
                     confirmBtn.textContent = `Подтвердить ${btn.textContent.trim()}`;
-                    confirmBtn.style.display = 'block';
                 }
             });
         });
 
-        // Инициализация выбранного столика при загрузке
         if (selectedTableInput.value) {
             const selectedBtn = document.querySelector(`.table-btn[data-table-id="${selectedTableInput.value}"]`);
-            if (selectedBtn) {
-                selectedBtn.click(); // Программный клик для активации всех обработчиков
-            }
+            if (selectedBtn) selectedBtn.click();
         }
     }
 
-    // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+    // Вспомогательные функции
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.textContent = message;
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
         document.body.appendChild(toast);
         
         setTimeout(() => {
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }, 100);
     }
 
@@ -83,57 +74,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const counter = document.getElementById('cart-counter');
         if (counter) {
             counter.textContent = count;
-            counter.style.display = count > 0 ? 'flex' : 'none';
+            counter.style.display = count > 0 ? 'inline-flex' : 'none';
         }
     }
 
-    // ==================== АДАПТИВНОЕ МЕНЮ ДЛЯ МОБИЛЬНЫХ ====================
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenuBtn.classList.toggle('open');
-        });
-    }
-
-    // ==================== ДИНАМИЧЕСКАЯ ПОДГРУЗКА ИЗОБРАЖЕНИЙ ====================
-    const lazyImages = document.querySelectorAll('img[data-src]');
-    
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-
-        lazyImages.forEach(img => imageObserver.observe(img));
-    } else {
-        // Fallback для старых браузеров
-        lazyImages.forEach(img => {
-            img.src = img.dataset.src;
-        });
+    async function updateCartCounterOnLoad() {
+        try {
+            const response = await fetch('/get_cart_count');
+            const data = await response.json();
+            if (data.success) {
+                updateCartCounter(data.total_items);
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке счетчика корзины:', error);
+        }
     }
 });
 
-// ==================== ПОЛИФИЛЛ ДЛЯ ДЕТАЛЕЙ ====================
+// Для старых браузеров
 (function () {
     if ('HTMLDetailsElement' in window) return;
     
     document.addEventListener('click', (e) => {
         const el = e.target.closest('details');
         if (!el) return;
-        
-        if (el.hasAttribute('open')) {
-            el.removeAttribute('open');
-        } else {
-            el.setAttribute('open', 'open');
-        }
+        el.hasAttribute('open') ? el.removeAttribute('open') : el.setAttribute('open', 'open');
     });
 })();
