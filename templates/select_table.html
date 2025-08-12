@@ -6,36 +6,36 @@
     <section class="table-selection">
         <h1>Выберите столик</h1>
         
-        <div class="table-map-container">
-            <div class="table-map">
-                <img src="{{ url_for('static', filename='images/table_map.png') }}" alt="Схема зала" usemap="#tablemap">
-                
-                <map name="tablemap">
-                    {% for table in tables %}
-                        <area shape="rect" coords="{{ table.x1 }},{{ table.y1 }},{{ table.x2 }},{{ table.y2 }}" 
-                              href="#" data-table-id="{{ table.id }}" alt="{{ table.name }}" 
-                              class="table-area {% if selected_table_id == table.id %}selected{% endif %}">
-                    {% endfor %}
-                </map>
+        <div class="table-container">
+            <!-- Изображение схемы зала -->
+            <div class="table-map-wrapper">
+                <img src="{{ url_for('static', filename='images/table_map.png') }}" 
+                     alt="Схема зала" 
+                     class="table-map-img">
             </div>
             
-            <div class="table-legend">
-                <h3>Доступные места:</h3>
-                <form action="{{ url_for('set_table') }}" method="post" id="table-form">
-                    <ul>
-                        {% for table in tables %}
-                            <li>
-                                <button type="button" class="table-btn {% if selected_table_id == table.id %}selected{% endif %}" 
-                                        data-table-id="{{ table.id }}">
-                                    {{ table.name }}
-                                </button>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <input type="hidden" name="table_id" id="selected-table" value="{{ selected_table_id }}">
-                    <button type="submit" class="button confirm-btn">Подтвердить выбор</button>
-                </form>
+            <!-- Кнопки выбора -->
+            <div class="table-buttons-grid">
+                {% for table in tables %}
+                    <button type="button" 
+                            class="table-btn {% if selected_table_id == table.id %}selected{% endif %}" 
+                            data-table-id="{{ table.id }}">
+                        {{ table.name }}
+                    </button>
+                {% endfor %}
             </div>
+            
+            <!-- Форма подтверждения -->
+            <form action="{{ url_for('set_table') }}" method="post" class="table-confirm-form">
+                <input type="hidden" name="table_id" id="selected-table" value="{{ selected_table_id }}">
+                <button type="submit" class="confirm-btn">
+                    {% if selected_table_id %}
+                        Подтвердить {{ tables|selectattr("id", "equalto", selected_table_id)|map(attribute="name")|first }}
+                    {% else %}
+                        Подтвердить выбор
+                    {% endif %}
+                </button>
+            </form>
         </div>
     </section>
 {% endblock %}

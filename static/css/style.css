@@ -454,3 +454,106 @@ h1, h2, h3 {
 area.selected {
     outline: 2px solid #ffc107;
 }
+
+/* Table Selection Styles */
+.table-selection {
+    padding: 15px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.table-map-wrapper {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.table-map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.table-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.table-btn {
+    padding: 10px 5px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f8f8f8;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.table-btn:hover {
+    background: #f0f0f0;
+}
+
+.table-btn.selected {
+    background: #ffc107;
+    border-color: #e0a800;
+    font-weight: bold;
+}
+
+.confirm-btn {
+    width: 100%;
+    padding: 12px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .table-buttons-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+    
+    .table-btn {
+        padding: 8px 3px;
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .table-container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    .table-map-wrapper {
+        flex: 2;
+    }
+    
+    .table-controls {
+        flex: 1;
+        padding-left: 20px;
+    }
+}
