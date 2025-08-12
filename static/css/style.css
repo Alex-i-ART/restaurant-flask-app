@@ -577,7 +577,7 @@ h2 {
 
 @media (max-width: 768px) {
     main {
-        margin-top: 70px; /* Меньший отступ для мобильных */
+        margin-top: 120px; /* Меньший отступ для мобильных */
     }
     
     header {

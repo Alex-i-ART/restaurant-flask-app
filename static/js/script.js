@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let lastScroll = 0;
 const header = document.querySelector('header');
 const headerHeight = header.offsetHeight;
-const scrollThreshold = 100; // На сколько пикселей нужно проскроллить для срабатывания
+const scrollThreshold = 20; // На сколько пикселей нужно проскроллить для срабатывания
 
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
