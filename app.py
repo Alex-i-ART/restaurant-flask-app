@@ -123,7 +123,7 @@ def place_order():
 
     session['last_order'] = {
         'id': order_id,
-        'items': dict(cart),
+        'order_items': dict(cart),
         'total': total_price,
         'date': order_date,
         'time': order_time,
@@ -138,18 +138,9 @@ def place_order():
 
 @app.route('/order_confirmation')
 def order_confirmation():
-    """Страница подтверждения заказа."""
-    last_order = session.get('last_order')  # Используем .get() чтобы избежать KeyError
+    last_order = session.pop('last_order', None)  # Получаем и сразу удаляем заказ
     
     if not last_order:
-        print("DEBUG: No last_order in session")
-        return redirect(url_for('index'))
-    
-    print(f"DEBUG: last_order content: {last_order}")
-    print(f"DEBUG: Type of order.items: {type(last_order.get('items'))}")
-    
-    if 'items' not in last_order or not isinstance(last_order['items'], dict):
-        print("DEBUG: 'items' is missing or not a dict in last_order")
         return redirect(url_for('index'))
     
     return render_template('order_confirmation.html', order=last_order)
