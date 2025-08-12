@@ -1,4 +1,3 @@
-/* Основные стили */
 :root {
     --primary: #ff6b6b;
     --primary-dark: #ff5252;
@@ -25,17 +24,39 @@ body {
     flex-direction: column;
 }
 
-/* Шапка */
+/* Фиксированная шапка с анимацией */
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     background-color: var(--dark);
     color: var(--light);
     padding: 1rem 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
     z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(0);
 }
 
+header.hide {
+    transform: translateY(-100%);
+}
+
+/* Основной контент с отступом под шапку */
+main {
+    margin-top: 80px; /* Отступ равен высоте шапки */
+    padding: 20px;
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Остальные стили остаются без изменений */
 nav {
     display: flex;
     justify-content: space-between;
@@ -74,17 +95,6 @@ nav {
     background-color: rgba(255,255,255,0.1);
 }
 
-/* Основное содержимое */
-main {
-    flex: 1;
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Подвал */
 footer {
     text-align: center;
     padding: 20px;
@@ -93,7 +103,6 @@ footer {
     margin-top: auto;
 }
 
-/* Общие элементы */
 .button {
     display: inline-block;
     background-color: var(--primary);
@@ -121,7 +130,6 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Секции */
 section {
     margin-bottom: 50px;
 }
@@ -141,7 +149,6 @@ h2 {
     font-size: 2rem;
 }
 
-/* Главная страница */
 .hero {
     text-align: center;
     padding: 80px 20px;
@@ -174,7 +181,6 @@ h2 {
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Меню */
 .menu-section {
     background-color: white;
     padding: 40px;
@@ -277,7 +283,6 @@ h2 {
     background-color: #218838;
 }
 
-/* Корзина */
 .cart-section {
     background-color: white;
     padding: 40px;
@@ -384,7 +389,6 @@ h2 {
     box-sizing: border-box;
 }
 
-/* Подтверждение заказа */
 .confirmation-section {
     text-align: center;
     padding: 50px;
@@ -427,7 +431,6 @@ h2 {
     justify-content: space-between;
 }
 
-/* Выбор столика */
 .table-selection {
     padding: 20px;
     background-color: white;
@@ -503,7 +506,6 @@ h2 {
     background-color: #218838;
 }
 
-/* Уведомления */
 .toast {
     position: fixed;
     bottom: 30px;
@@ -573,13 +575,13 @@ h2 {
         width: 100%;
         justify-content: flex-end;
     }
-}
 
-@media (max-width: 768px) {
+    /* Меньший отступ для мобильных */
     main {
-        margin-top: 200px; /* Меньший отступ для мобильных */
+        margin-top: 70px;
+        padding-top: 15px;
     }
-    
+
     header {
         padding: 10px 0;
     }
@@ -603,72 +605,5 @@ h2 {
     .cart-section,
     .menu-section {
         padding: 25px 15px;
-    }
-}
-
-/* Анимация шапки при скролле */
-header {
-    transition: transform 0.3s ease-in-out;
-}
-
-header.hide {
-    transform: translateY(-100%);
-}
-
-header.show {
-    transform: translateY(0);
-}
-
-/* Фиксированная шапка */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
-/* Добавляем отступ для основного содержимого */
-main {
-    margin-top: 150px; /* Высота шапки */
-}
-
-/* Фиксированная шапка с учетом содержимого */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
-    /* Добавляем тень для лучшего визуального разделения */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Основной контент - добавляем отступ равный высоте шапки */
-main {
-    margin-top: 80px; /* Подбираем под вашу шапку */
-    padding-top: 20px; /* Дополнительный отступ */
-}
-
-/* Анимация шапки */
-header {
-    transition: transform 0.3s ease-in-out;
-}
-
-header.hide {
-    transform: translateY(-100%);
-}
-
-header.show {
-    transform: translateY(0);
-}
-
-/* Адаптация для мобильных */
-@media (max-width: 768px) {
-    main {
-        margin-top: 70px; /* Меньше для мобильных */
-        padding-top: 15px;
     }
 }
