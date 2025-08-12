@@ -139,7 +139,7 @@ function initHeaderScroll() {
     const header = document.querySelector('header');
     const headerHeight = header.offsetHeight;
     let lastScroll = 0;
-    const scrollThreshold = 50; // Меньший порог для мобильных
+    const scrollThreshold = 20; // Меньший порог для мобильных
 
     // Устанавливаем правильный отступ для main
     document.querySelector('main').style.marginTop = `${headerHeight}px`;
