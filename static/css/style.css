@@ -631,5 +631,44 @@ header {
 
 /* Добавляем отступ для основного содержимого */
 main {
-    margin-top: 50px; /* Высота шапки */
+    margin-top: 150px; /* Высота шапки */
+}
+
+/* Фиксированная шапка с учетом содержимого */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    /* Добавляем тень для лучшего визуального разделения */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Основной контент - добавляем отступ равный высоте шапки */
+main {
+    margin-top: 80px; /* Подбираем под вашу шапку */
+    padding-top: 20px; /* Дополнительный отступ */
+}
+
+/* Анимация шапки */
+header {
+    transition: transform 0.3s ease-in-out;
+}
+
+header.hide {
+    transform: translateY(-100%);
+}
+
+header.show {
+    transform: translateY(0);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    main {
+        margin-top: 70px; /* Меньше для мобильных */
+        padding-top: 15px;
+    }
 }

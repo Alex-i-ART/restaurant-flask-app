@@ -133,3 +133,37 @@ window.addEventListener('scroll', () => {
 
 // Инициализация при загрузке
 header.classList.add('show');
+
+// Управление шапкой с учетом высоты
+function initHeaderScroll() {
+    const header = document.querySelector('header');
+    const headerHeight = header.offsetHeight;
+    let lastScroll = 0;
+    const scrollThreshold = 50; // Меньший порог для мобильных
+
+    // Устанавливаем правильный отступ для main
+    document.querySelector('main').style.marginTop = `${headerHeight}px`;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll <= headerHeight) {
+            header.classList.remove('hide');
+            return;
+        }
+        
+        if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
+            header.classList.add('hide');
+        } else {
+            header.classList.remove('hide');
+        }
+        
+        lastScroll = currentScroll;
+    });
+
+    // Инициализация
+    header.classList.add('show');
+}
+
+// Вызываем после загрузки DOM
+document.addEventListener('DOMContentLoaded', initHeaderScroll);
